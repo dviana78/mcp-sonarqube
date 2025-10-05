@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  sonarqube:
+    image: sonarqube:10-community
+    container_name: sonarqube
+    environment:
+      # Use built-in H2 database for Windows compatibility
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    ports:
+      - "9000:9000"
+    networks:
+      - sonarqube-network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  mcp-server:
+    build: ./mcp-server
+    container_name: sonarqube-mcp-server
+    depends_on:
+      - sonarqube
+    environment:
+      SONARQUBE_URL: http://sonarqube:9000
+      SONARQUBE_USERNAME: admin
+      SONARQUBE_PASSWORD: admin
+      NODE_ENV: production
+    ports:
+      - "8080:8080"
+    networks:
+      - sonarqube-network
+    restart: unless-stopped
+
+networks:
+  sonarqube-network:
+    driver: bridge
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
