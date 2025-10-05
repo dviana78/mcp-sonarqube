@@ -94,6 +94,23 @@ export class SonarQubeClient {
     }
   }
 
+  // Health check method - verifies SonarQube server connectivity
+  async healthCheck(): Promise<{ status: string; accessible: boolean; error?: string }> {
+    try {
+      const response = await this.client.get('/api/system/status');
+      return {
+        status: response.data.status || 'UNKNOWN',
+        accessible: true
+      };
+    } catch (error) {
+      return {
+        status: 'DOWN',
+        accessible: false,
+        error: error instanceof Error ? error.message : String(error)
+      };
+    }
+  }
+
   // Get server status
   async getSystemStatus(): Promise<{ status: string; version: string; id: string }> {
     const response = await this.client.get('/api/system/status');

@@ -31,7 +31,7 @@ services:
     environment:
       SONARQUBE_URL: http://sonarqube:9000
       SONARQUBE_USERNAME: admin
-      SONARQUBE_PASSWORD: admin
+      SONARQUBE_PASSWORD: DVS.1978.ygl
       NODE_ENV: production
     ports:
       - "8080:8080"

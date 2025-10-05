@@ -10,6 +10,8 @@ A Model Context Protocol (MCP) server that provides complete integration with So
 - **Informative Resources**: Configurations, guides, and documentation
 - **Dockerized**: Easy deployment with Docker Compose
 - **Real-time**: Direct access to quality metrics, issues, and coverage
+- **Dual Mode**: Supports both MCP stdio protocol and HTTP REST API
+- **Health Monitoring**: Built-in health checks and diagnostics
 
 ## 📋 Available MCP Tools
 
@@ -41,6 +43,45 @@ A Model Context Protocol (MCP) server that provides complete integration with So
 - `sonarqube://config/typescript` - Configuration for TypeScript projects
 - `sonarqube://setup/docker` - Docker setup instructions
 - `sonarqube://quality-gates/list` - List of configured quality gates
+
+## 🌐 HTTP API Endpoints
+
+The MCP server also provides HTTP endpoints for testing and debugging:
+
+### Base URL: `http://localhost:8080`
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Server information and available endpoints |
+| `/health` | GET | Health check for both MCP server and SonarQube |
+| `/tools` | GET | List of available MCP tools |
+| `/resources` | GET | List of available MCP resources |
+
+### Example Usage
+
+```bash
+# Check server health
+curl http://localhost:8080/health
+
+# Get server info
+curl http://localhost:8080/
+
+# List tools
+curl http://localhost:8080/tools
+
+# List resources
+curl http://localhost:8080/resources
+```
+
+### PowerShell Examples
+
+```powershell
+# Check health
+Invoke-RestMethod -Uri "http://localhost:8080/health"
+
+# Get tools list
+Invoke-RestMethod -Uri "http://localhost:8080/tools"
+```
 
 ## 🛠️ Installation and Configuration
 
@@ -92,8 +133,27 @@ SONARQUBE_TOKEN=your_token_here
 # MCP Server Configuration
 NODE_ENV=production
 PORT=8080
+MCP_MODE=both  # Options: stdio, http, both
 LOG_LEVEL=info
 ```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SONARQUBE_URL` | `http://localhost:9000` | SonarQube server URL |
+| `SONARQUBE_USERNAME` | `admin` | SonarQube username |
+| `SONARQUBE_PASSWORD` | `admin` | SonarQube password |
+| `SONARQUBE_TOKEN` | - | SonarQube API token (optional, overrides username/password) |
+| `PORT` | `8080` | HTTP server port |
+| `MCP_MODE` | `both` | Server mode: `stdio`, `http`, or `both` |
+| `NODE_ENV` | `development` | Node.js environment |
+
+### Server Modes
+
+- **`stdio`**: MCP protocol only (for AI clients)
+- **`http`**: HTTP REST API only (for testing/debugging) 
+- **`both`**: Both protocols available (recommended)
 
 ### MCP Client Configuration
 

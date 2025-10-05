@@ -41,7 +41,10 @@ docker-compose logs -f mcp-server
 ### 2. Access Services
 
 - **SonarQube Web UI**: http://localhost:9000
-- **MCP Server**: Port 8080 (for debugging)
+- **MCP Server Health Check**: http://localhost:8080/health
+- **MCP Server API Info**: http://localhost:8080/
+- **MCP Tools List**: http://localhost:8080/tools
+- **MCP Resources List**: http://localhost:8080/resources
 - **Default credentials**: 
   - Username: `admin`
   - Password: `admin`
@@ -142,6 +145,33 @@ docker-compose restart mcp-server
 # Rebuild MCP Server
 docker-compose build mcp-server
 docker-compose up -d mcp-server
+
+# Test MCP Server health
+curl http://localhost:8080/health
+
+# List available tools
+curl http://localhost:8080/tools
+
+# Get server information  
+curl http://localhost:8080/
+```
+
+### Testing the MCP Server
+
+You can test the MCP server functionality using HTTP endpoints:
+
+```powershell
+# Check if both SonarQube and MCP server are healthy
+Invoke-RestMethod -Uri "http://localhost:8080/health"
+
+# Get list of available MCP tools
+Invoke-RestMethod -Uri "http://localhost:8080/tools"
+
+# Get list of available MCP resources
+Invoke-RestMethod -Uri "http://localhost:8080/resources"
+
+# Get server information
+Invoke-RestMethod -Uri "http://localhost:8080/"
 ```
 
 ## Configuration Details
